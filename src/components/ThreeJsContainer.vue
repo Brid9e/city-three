@@ -13,6 +13,7 @@ let scene: any
 let camera: any
 let renderer: any
 let container: any
+let controls: any
 const threeJsContainer = ref()
 
 const init = () => {
@@ -23,17 +24,17 @@ const init = () => {
   scene.fog = new THREE.Fog(0xcccccc, 10, 60);  // (颜色, 近距离, 远距离)
 
   // 加载天空盒纹理
-  const skyName = 'skyBox3'
-  const sky = new THREE.CubeTextureLoader()
-  const texture = sky.load([
-    `public/skyBox/${skyName}/negx.jpg`, // 右侧
-    `public/skyBox/${skyName}/negy.jpg`, // 左侧
-    `public/skyBox/${skyName}/negz.jpg`, // 上侧
-    `public/skyBox/${skyName}/posx.jpg`, // 下侧
-    `public/skyBox/${skyName}/posy.jpg`, // 前侧
-    `public/skyBox/${skyName}/posz.jpg`,  // 后侧
-  ])
-  scene.background = texture
+  // const skyName = 'skyBox3'
+  // const sky = new THREE.CubeTextureLoader()
+  // const texture = sky.load([
+  //   `public/skyBox/${skyName}/negx.jpg`, // 右侧
+  //   `public/skyBox/${skyName}/negy.jpg`, // 左侧
+  //   `public/skyBox/${skyName}/negz.jpg`, // 上侧
+  //   `public/skyBox/${skyName}/posx.jpg`, // 下侧
+  //   `public/skyBox/${skyName}/posy.jpg`, // 前侧
+  //   `public/skyBox/${skyName}/posz.jpg`,  // 后侧
+  // ])
+  // scene.background = texture
 
   // const sky = new THREE.EquirectangularTextureLoader()
   // sky.load('public/skyBox/skyBox3/negx.jpg', (texture: any) => {
@@ -65,9 +66,9 @@ const init = () => {
     glb.scene.traverse((child: any) => {
       if (child.isMesh) {
         const edges = new THREE.EdgesGeometry(child.geometry)
-        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 'black' }))
+        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: '#000000' }))
         line.material.depthTest = false
-        line.material.opacity = 0.05
+        line.material.opacity = 0.06
         line.material.transparent = true
         child.material = new THREE.MeshMatcapMaterial({
           color: 0xffffff,
@@ -86,23 +87,22 @@ const init = () => {
   container = threeJsContainer.value
   if (container) container.appendChild(renderer.domElement)
 
-  const controls = new OrbitControls(camera, renderer.domElement)
-
+  controls = new OrbitControls(camera, renderer.domElement)
+  controls.autoRotate = false
+  controls.dampingFactor = 0.1
   controls.enableZoom = true
   controls.enablePan = true
   controls.enableDamping = true
-  controls.dampingFactor = 1
   controls.screenSpacePanning = true
   controls.minDistance = 2
   controls.maxDistance = 20
   controls.maxPolarAngle = Math.PI / 3
-
-  controls.update()
   animate()
 }
 
 const animate = () => {
   requestAnimationFrame(animate)
+  controls.update()
   renderer.render(scene, camera)
 }
 
