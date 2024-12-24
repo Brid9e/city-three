@@ -1,0 +1,38 @@
+[
+  {
+    "type": "scene",
+    "name": "场景",
+    "file": "/test4.glb",
+    "data": {
+      "id": "11",
+      "name": "场景"
+    },
+    "params": {
+      "showLine": true,
+      "lineColor": "black",
+      "lineParams": {
+        "depthTest": false,
+        "opacity": 0.06,
+        "transparent": true
+      },
+      "material": "MeshMatcapMaterial",
+      "materialParams": {
+        "color": "0xffffff"
+      }
+    }
+  },
+  {
+    "type": "mesh",
+    "name": "篮球场",
+    "file": "/basketball/basketball.gltf",
+    "path": "/basketball",
+    "data": {
+      "id": "12",
+      "name": "篮球场"
+    },
+    "params": {
+      "material": "MeshMatcapMaterial",
+      "materialParams": {}
+    }
+  }
+]
