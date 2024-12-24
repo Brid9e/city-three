@@ -24,8 +24,8 @@
   {
     "type": "mesh",
     "name": "篮球场",
-    "file": "/basketball/basketball.gltf",
-    "path": "/basketball",
+    "file": "/basketball2/basketball2.gltf",
+    "path": "/basketball2",
     "data": {
       "id": "12",
       "name": "篮球场"
