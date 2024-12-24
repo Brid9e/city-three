@@ -1,5 +1,5 @@
 <template>
-  <div id="three-js-container" ref="threeJsContainer"></div>
+  <div class="three-js-container" ref="threeJsContainer"></div>
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
@@ -50,7 +50,7 @@ const init = () => {
   const geometry = new THREE.PlaneGeometry(1000, 1000) // 创建一个 10x10 的平面
   const material = new THREE.MeshMatcapMaterial({ color: 0xcccccc, side: THREE.DoubleSide })
   const plane = new THREE.Mesh(geometry, material)
-  plane.rotation.x = - Math.PI / 2 // 将平面旋转 90 度，使其水平
+  plane.rotation.x = -Math.PI / 2 // 将平面旋转 90 度，使其水平
   plane.position.y = -0.2
   scene.add(plane)
 
@@ -80,10 +80,16 @@ const init = () => {
   controls.enablePan = true
   controls.enableDamping = true
   controls.screenSpacePanning = true
-  controls.minDistance = 2
+  controls.minDistance = 1
   controls.maxDistance = 20
   controls.maxPolarAngle = Math.PI / 3
   animate()
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+  })
 }
 
 /**
@@ -95,7 +101,9 @@ function meshLoadModel(loader: any, item: any) {
   loader.load(item?.file, (glb: any) => {
     glb.scene.traverse((child: any) => {
       if (child.isMesh) {
-        child.material = new THREE[item?.params?.material](item?.params?.materialParams)
+        if (item?.params?.material) {
+          child.material = new THREE[item?.params?.material](item?.params?.materialParams)
+        }
 
         if (!isEmpty(item?.params?.position)) {
           if (child?.position?.x) {
@@ -114,6 +122,8 @@ function meshLoadModel(loader: any, item: any) {
         }
 
         if (item?.type === 'mesh') {
+          child.material.emissive = child.material.color
+          child.material.emissiveMap = child.material.map
           child.name = item.name
           child.userData = item.data
           modelList.value.push(child)
@@ -211,9 +221,9 @@ function threeClick() {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
     raycaster.setFromCamera(pointer, camera)
-    //geometrys为需要监听的Mesh合集，可以通过这个集合来过滤掉不需要监听的元素例如地面天空
+    // //geometrys为需要监听的Mesh合集，可以通过这个集合来过滤掉不需要监听的元素例如地面天空
     intersects = raycaster.intersectObjects(modelList.value, true)
-    //被射线穿过的几何体为一个集合，越排在前面说明其位置离端点越近，所以直接取[0]
+    // //被射线穿过的几何体为一个集合，越排在前面说明其位置离端点越近，所以直接取[0]
     if (intersects.length > 0) {
       const clickEle = filter(intersects, (item: any) => (item?.object?.isMesh))?.[0]?.object
       if (clickEle) {
@@ -236,7 +246,7 @@ defineExpose({
 </script>
 
 <style scoped>
-#three-js-container {
+.three-js-container {
   width: 100%;
   height: 100vh;
 }

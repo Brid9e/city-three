@@ -17,22 +17,18 @@
       },
       "material": "MeshMatcapMaterial",
       "materialParams": {
-        "color": "0xffffff"
+        "color": "#ffffff"
       }
     }
   },
   {
     "type": "mesh",
     "name": "篮球场",
-    "file": "/basketball2/basketball2.gltf",
-    "path": "/basketball2",
+    "file": "/basketball.glb",
     "data": {
       "id": "12",
       "name": "篮球场"
     },
-    "params": {
-      "material": "MeshMatcapMaterial",
-      "materialParams": {}
-    }
+    "params": {}
   }
 ]
