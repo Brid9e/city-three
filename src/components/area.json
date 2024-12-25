@@ -1,0 +1,17 @@
+[
+  {
+    "type": "mesh",
+    "name": "楼层-1楼",
+    "file": "/floortest.glb",
+    "data": {
+      "id": "19",
+      "name": "楼层-1楼"
+    },
+    "params": {
+      "material": "MeshMatcapMaterial",
+      "materialParams": {
+        "color": "#ffffff"
+      }
+    }
+  }
+]

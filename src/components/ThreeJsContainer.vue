@@ -2,64 +2,118 @@
   <div class="three-js-container" ref="threeJsContainer"></div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Tween, Easing, Group } from '@tweenjs/tween.js'
-import { filter, isEmpty } from 'lodash-unified'
-import threeJson from './data.json'
+import { filter, isEmpty, mergeWith } from 'lodash-unified'
+
+const props = defineProps({
+  data: {
+    type: Array,
+    default: () => []
+  },
+  options: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const defaultOptions = {
+  stop: false,
+  useFog: true,
+  useSkyBox: true,
+  bgTransparent: false,
+  useGround: true,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  camera: {
+    position: [5, 5, 10]
+  },
+  controls: {
+    autoRotate: false,
+    dampingFactor: 0.1,
+    enableZoom: true,
+    enablePan: true,
+    enableDamping: true,
+    screenSpacePanning: true,
+    minDistance: 1,
+    maxDistance: 20,
+    maxPolarAngle: Math.PI / 3,
+  }
+}
+
+const opt = computed(() => mergeWith({}, defaultOptions, props.options))
+
+const emits = defineEmits<{ (e: 'change', v: any): void }>()
 
 let scene: any
 let camera: any
 let renderer: any
 let container: any
 let controls: any
+let skyTexture: any
 const threeJsContainer = ref()
 const modelList = ref<Array<any>>([])
-const group = new Group()
+const groupMove = new Group()
 
 const init = () => {
   scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
-  camera.position.set(5, 5, 5)
 
-  scene.fog = new THREE.Fog(0xcccccc, 10, 60);  // (颜色, 近距离, 远距离)
-
-  // 加载天空盒纹理
-  // const skyName = 'skyBox3'
-  // const sky = new THREE.CubeTextureLoader()
-  // const texture = sky.load([
-  //   `public/skyBox/${skyName}/negx.jpg`, // 右侧
-  //   `public/skyBox/${skyName}/negy.jpg`, // 左侧
-  //   `public/skyBox/${skyName}/negz.jpg`, // 上侧
-  //   `public/skyBox/${skyName}/posx.jpg`, // 下侧
-  //   `public/skyBox/${skyName}/posy.jpg`, // 前侧
-  //   `public/skyBox/${skyName}/posz.jpg`,  // 后侧
-  // ])
-  scene.background = new THREE.Color(0xcccccc)
+  camera = new THREE.PerspectiveCamera(50, opt.value.width / opt.value.height, 0.1, 1000)
+  camera.position.set(...opt.value?.camera?.position)
 
   renderer = new THREE.WebGLRenderer({
-    antialias: true
+    antialias: true,
+    alpha: opt.value?.bgTransparent
   })
 
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  // 背景透明
+  if (opt.value?.bgTransparent) {
+    renderer.setClearAlpha(0)
+    scene.background = null
+  }
 
-  // 画一个平面
-  const geometry = new THREE.PlaneGeometry(1000, 1000) // 创建一个 10x10 的平面
-  const material = new THREE.MeshMatcapMaterial({ color: 0xcccccc, side: THREE.DoubleSide })
-  const plane = new THREE.Mesh(geometry, material)
-  plane.rotation.x = -Math.PI / 2 // 将平面旋转 90 度，使其水平
-  plane.position.y = -0.2
-  scene.add(plane)
+  renderer.setSize(opt.value.width, opt.value.height)
+
+  if (opt.value?.useFog) {
+    scene.fog = new THREE.Fog(0xcccccc, 10, 60);  // (颜色, 近距离, 远距离)
+  }
+
+  if (opt.value?.useSkyBox && !opt.value?.bgTransparent) {
+    // 加载天空盒纹理
+    const skyName = 'skyBox2'
+    const sky = new THREE.CubeTextureLoader()
+    skyTexture = sky.load([
+      `public/skyBox/${skyName}/negx.jpg`, // 右侧
+      `public/skyBox/${skyName}/negy.jpg`, // 左侧
+      `public/skyBox/${skyName}/negz.jpg`, // 上侧
+      `public/skyBox/${skyName}/posx.jpg`, // 下侧
+      `public/skyBox/${skyName}/posy.jpg`, // 前侧
+      `public/skyBox/${skyName}/posz.jpg`,  // 后侧
+    ])
+    scene.background = new THREE.Color(0xcccccc)
+  }
+
+  // 画一个平面作为地面
+  if (opt.value?.useGround) {
+    const geometry = new THREE.PlaneGeometry(1000, 1000) // 创建一个 10x10 的平面
+    const material = new THREE.MeshMatcapMaterial({ color: 0xcccccc, side: THREE.DoubleSide })
+    const plane = new THREE.Mesh(geometry, material)
+    plane.rotation.x = -Math.PI / 2 // 将平面旋转 90 度，使其水平
+    plane.position.y = -0.2
+    scene.add(plane)
+  }
+
 
   // 环境光
   const light = new THREE.DirectionalLight(0x000000, 1)
   scene.add(light)
 
   const loader = new GLTFLoader()
-  threeJson.forEach((item: any) => {
+  props.data.forEach((item: any) => {
     if (item?.path) {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath(item?.path)
@@ -74,21 +128,16 @@ const init = () => {
   if (container) container.appendChild(renderer.domElement)
 
   controls = new OrbitControls(camera, renderer.domElement)
-  controls.autoRotate = false
-  controls.dampingFactor = 0.1
-  controls.enableZoom = true
-  controls.enablePan = true
-  controls.enableDamping = true
-  controls.screenSpacePanning = true
-  controls.minDistance = 1
-  controls.maxDistance = 20
-  controls.maxPolarAngle = Math.PI / 3
+
+  for (const k in opt.value.controls) {
+    controls[k] = opt.value.controls[k]
+  }
   animate()
 
   window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight
+    camera.aspect = opt.value.width / opt.value.height
     camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(opt.value.width, opt.value.height)
   })
 }
 
@@ -122,8 +171,13 @@ function meshLoadModel(loader: any, item: any) {
         }
 
         if (item?.type === 'mesh') {
-          child.material.emissive = child.material.color
-          child.material.emissiveMap = child.material.map
+          if (!item?.params?.material) {
+            child.material.emissive = child.material.color
+            child.material.emissiveMap = child.material.map
+          }
+          if (item?.params?.isGlass) {
+            child.material.envMap = skyTexture
+          }
           child.name = item.name
           child.userData = item.data
           modelList.value.push(child)
@@ -173,11 +227,11 @@ function moveCameraTo(model: any, duration = 2000, ah = 5) {
   )
 
   // 创建一个 TWEEN 动画
-  new Tween(animation, group)
+  new Tween(animation, groupMove)
     .to({ t: 1 }, duration)
     .easing(Easing.Quadratic.InOut) // 使用缓动效果
     .onStart(() => {
-      // emits()
+      // emits('change', model.userData)
     })
     .onUpdate(() => {
       const t = animation.t
@@ -192,15 +246,18 @@ function moveCameraTo(model: any, duration = 2000, ah = 5) {
       controls.target.copy(targetPosition)
       controls.update()
       camera.lookAt(targetPosition)// 保持摄像机始终朝向模型
+      emits('change', model.userData)
     })
     .start()
 }
 
 const animate = () => {
   requestAnimationFrame(animate)
-  controls.update()
-  group.update()
-  renderer.render(scene, camera)
+  if (!opt.value?.stop) {
+    controls.update()
+    groupMove.update()
+    renderer.render(scene, camera)
+  }
 }
 
 /**
@@ -218,20 +275,20 @@ function threeClick() {
   let raycaster = new THREE.Raycaster()
   function meshOnClick(event: MouseEvent) {
     const pointer = new THREE.Vector2()
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
+    pointer.x = (event.clientX / opt.value.width) * 2 - 1
+    pointer.y = -(event.clientY / opt.value.height) * 2 + 1
     raycaster.setFromCamera(pointer, camera)
     // //geometrys为需要监听的Mesh合集，可以通过这个集合来过滤掉不需要监听的元素例如地面天空
-    intersects = raycaster.intersectObjects(modelList.value, true)
+    // intersects = raycaster.intersectObjects(modelList.value, true)
     // //被射线穿过的几何体为一个集合，越排在前面说明其位置离端点越近，所以直接取[0]
-    if (intersects.length > 0) {
-      const clickEle = filter(intersects, (item: any) => (item?.object?.isMesh))?.[0]?.object
-      if (clickEle) {
-        moveCameraTo(clickEle)
-      }
-    } else {
-      //若没有几何体被监听到，可以做一些取消操作
-    }
+    // if (intersects.length > 0) {
+    //   const clickEle = filter(intersects, (item: any) => (item?.object?.isMesh))?.[0]?.object
+    //   if (clickEle) {
+    //     moveCameraTo(clickEle)
+    //   }
+    // } else {
+    //   //若没有几何体被监听到，可以做一些取消操作
+    // }
   }
 }
 

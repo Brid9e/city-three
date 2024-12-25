@@ -9,13 +9,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@tweenjs/tween.js": "^25.0.0",
     "ant-design-vue": "4.x",
+    "echarts": "^5.5.1",
+    "pinia": "^2.3.0",
     "sass": "^1.83.0",
     "three": "^0.171.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-echarts": "^7.0.3"
   },
   "devDependencies": {
+    "@types/node": "^22.10.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "lodash-unified": "^1.0.3",

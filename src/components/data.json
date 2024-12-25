@@ -9,7 +9,7 @@
     },
     "params": {
       "showLine": true,
-      "lineColor": "black",
+      "lineColor": "#000000",
       "lineParams": {
         "depthTest": false,
         "opacity": 0.06,
@@ -23,12 +23,116 @@
   },
   {
     "type": "mesh",
-    "name": "篮球场",
+    "name": "哈工大篮球场",
     "file": "/basketball.glb",
     "data": {
       "id": "12",
-      "name": "篮球场"
+      "name": "哈工大篮球场",
+      "area": [
+        {
+          "id": "1",
+          "nop": 5,
+          "capacity": 10,
+          "name": "篮球场一区"
+        }
+      ]
     },
     "params": {}
+  },
+  {
+    "type": "mesh",
+    "name": "哈工大体育场",
+    "file": "/stadium.glb",
+    "data": {
+      "id": "13",
+      "name": "哈工大体育场",
+      "area": [
+        {
+          "id": "1",
+          "nop": 300,
+          "capacity": 1000,
+          "name": "A区"
+        },
+        {
+          "id": "2",
+          "nop": 100,
+          "capacity": 1000,
+          "name": "B区"
+        },
+        {
+          "id": "3",
+          "nop": 200,
+          "capacity": 1000,
+          "name": "C区"
+        },
+        {
+          "id": "4",
+          "nop": 500,
+          "capacity": 1000,
+          "name": "D区"
+        },
+        {
+          "id": "5",
+          "nop": 100,
+          "capacity": 300,
+          "name": "E区"
+        }
+      ]
+    }
+  },
+  {
+    "type": "mesh",
+    "name": "实验楼",
+    "file": "/syl/build.glb",
+    "data": {
+      "id": "14",
+      "name": "实验楼",
+      "area": [
+        {
+          "id": "1",
+          "nop": 250,
+          "capacity": 300,
+          "name": "一层"
+        },
+        {
+          "id": "2",
+          "nop": 100,
+          "capacity": 300,
+          "name": "二层"
+        },
+        {
+          "id": "3",
+          "nop": 3,
+          "capacity": 300,
+          "name": "三层"
+        },
+        {
+          "id": "4",
+          "nop": 50,
+          "capacity": 300,
+          "name": "四层"
+        },
+        {
+          "id": "5",
+          "nop": 10,
+          "capacity": 300,
+          "name": "五层"
+        }
+      ]
+    }
+  },
+  {
+    "type": "mesh",
+    "name": "实验楼玻璃",
+    "file": "/syl/glass.glb",
+    "data": {
+      "id": "15",
+      "name": "实验楼玻璃"
+    },
+    "params": {
+      "isGlass": true,
+      "material": "MeshBasicMaterial",
+      "materialParams": {}
+    }
   }
 ]
