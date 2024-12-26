@@ -8,8 +8,10 @@
             <ListItem @click="onHandleClick(item?.type, item?.params)">
               <p>{{ item?.title }}</p>
               <template #actions>
-                <Badge :status="item?.status === 1 ? 'processing' : 'default'"
-                  :color="item?.status === 1 ? 'var(--main-color)' : ''" />
+                <div>
+                  <Badge :status="item?.status === 1 ? 'processing' : 'default'"
+                    :color="item?.status === 1 ? 'var(--main-color)' : ''" />
+                </div>
               </template>
             </ListItem>
           </template>

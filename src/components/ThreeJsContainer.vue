@@ -5,6 +5,7 @@
 import { ref, onMounted, computed } from 'vue'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Tween, Easing, Group } from '@tweenjs/tween.js'
@@ -114,9 +115,18 @@ const init = () => {
 
   const loader = new GLTFLoader()
   props.data.forEach((item: any) => {
-    if (item?.path) {
+    if (item?.hdr) {
+      new RGBELoader().load(item?.hdr, (texture: any) => {
+        texture.mapping = THREE.EquirectangularReflectionMapping
+        if (!opt.value?.bgTransparent) {
+          scene.background = texture
+        }
+        scene.environment = texture
+      })
+    }
+    if (item?.decoderPath) {
       const dracoLoader = new DRACOLoader()
-      dracoLoader.setDecoderPath(item?.path)
+      dracoLoader.setDecoderPath(item?.decoderPath)
       loader.setDRACOLoader(dracoLoader)
     }
     meshLoadModel(loader, item)
@@ -171,7 +181,12 @@ function meshLoadModel(loader: any, item: any) {
         }
 
         if (item?.type === 'mesh') {
-          if (!item?.params?.material) {
+
+          if (item?.params?.selfLuminous && item?.params?.material) {
+            throw new Error('selfLuminous 和 material 不能同时存在')
+          }
+
+          if (item?.params?.selfLuminous === true && !item?.params?.material) {
             child.material.emissive = child.material.color
             child.material.emissiveMap = child.material.map
           }

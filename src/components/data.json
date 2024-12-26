@@ -37,7 +37,9 @@
         }
       ]
     },
-    "params": {}
+    "params": {
+      "selfLuminous": true
+    }
   },
   {
     "type": "mesh",
@@ -78,6 +80,9 @@
           "name": "E区"
         }
       ]
+    },
+    "params": {
+      "selfLuminous": true
     }
   },
   {
@@ -119,6 +124,9 @@
           "name": "五层"
         }
       ]
+    },
+    "params": {
+      "selfLuminous": true
     }
   },
   {

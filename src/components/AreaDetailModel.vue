@@ -38,7 +38,9 @@ const options = computed(() => ({
   },
   bgTransparent: true,
   controls: {
-    maxDistance: 40
+    minDistance: 1,
+    maxDistance: 3,
+    maxPolarAngle: 360
   }
 }))
 
