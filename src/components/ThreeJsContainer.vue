@@ -2,7 +2,7 @@
   <div class="three-js-container" ref="threeJsContainer"></div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, useId } from 'vue'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
@@ -10,6 +10,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Tween, Easing, Group } from '@tweenjs/tween.js'
 import { filter, isEmpty, mergeWith } from 'lodash-unified'
+// import GUI from 'lil-gui'
 
 const props = defineProps({
   data: {
@@ -149,6 +150,15 @@ const init = () => {
     camera.updateProjectionMatrix()
     renderer.setSize(opt.value.width, opt.value.height)
   })
+
+  // const gui = new GUI();
+  // const cubeFolder = gui.addFolder('Params Panel')
+  // const guiContainer = gui.domElement
+  // guiContainer.style.position = 'absolute'
+  // guiContainer.style.top = '0'
+  // guiContainer.style.left = '0'
+  // cubeFolder.add(camera.rotation, 'x', 0, Math.PI * 2).name('Rotate X')
+  // cubeFolder.open()
 }
 
 /**

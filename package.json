@@ -12,7 +12,9 @@
     "@ant-design/icons-vue": "^7.0.1",
     "@tweenjs/tween.js": "^25.0.0",
     "ant-design-vue": "4.x",
+    "dat.gui": "^0.7.9",
     "echarts": "^5.5.1",
+    "lil-gui": "^0.20.0",
     "pinia": "^2.3.0",
     "sass": "^1.83.0",
     "three": "^0.171.0",
@@ -20,6 +22,7 @@
     "vue-echarts": "^7.0.3"
   },
   "devDependencies": {
+    "@types/dat.gui": "^0.7.13",
     "@types/node": "^22.10.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
