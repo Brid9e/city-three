@@ -2,7 +2,7 @@
   {
     "type": "scene",
     "name": "场景",
-    "file": "/test4.glb",
+    "file": "test4.glb",
     "data": {
       "id": "11",
       "name": "场景"
@@ -24,7 +24,7 @@
   {
     "type": "mesh",
     "name": "哈工大篮球场",
-    "file": "/basketball.glb",
+    "file": "basketball.glb",
     "data": {
       "id": "12",
       "name": "哈工大篮球场",
@@ -44,7 +44,7 @@
   {
     "type": "mesh",
     "name": "哈工大体育场",
-    "file": "/stadium.glb",
+    "file": "stadium.glb",
     "data": {
       "id": "13",
       "name": "哈工大体育场",
@@ -88,7 +88,7 @@
   {
     "type": "mesh",
     "name": "实验楼",
-    "file": "/syl/build.glb",
+    "file": "syl/build.glb",
     "data": {
       "id": "14",
       "name": "实验楼",
@@ -132,7 +132,7 @@
   {
     "type": "mesh",
     "name": "实验楼玻璃",
-    "file": "/syl/glass.glb",
+    "file": "syl/glass.glb",
     "data": {
       "id": "15",
       "name": "实验楼玻璃"
