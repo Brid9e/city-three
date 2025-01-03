@@ -89,12 +89,12 @@ const init = () => {
     const skyName = 'skyBox2'
     const sky = new THREE.CubeTextureLoader()
     skyTexture = sky.load([
-      `public/skyBox/${skyName}/negx.jpg`, // 右侧
-      `public/skyBox/${skyName}/negy.jpg`, // 左侧
-      `public/skyBox/${skyName}/negz.jpg`, // 上侧
-      `public/skyBox/${skyName}/posx.jpg`, // 下侧
-      `public/skyBox/${skyName}/posy.jpg`, // 前侧
-      `public/skyBox/${skyName}/posz.jpg`,  // 后侧
+      `skyBox/${skyName}/negx.jpg`, // 右侧
+      `skyBox/${skyName}/negy.jpg`, // 左侧
+      `skyBox/${skyName}/negz.jpg`, // 上侧
+      `skyBox/${skyName}/posx.jpg`, // 下侧
+      `skyBox/${skyName}/posy.jpg`, // 前侧
+      `skyBox/${skyName}/posz.jpg`,  // 后侧
     ])
     scene.background = new THREE.Color(0xcccccc)
   }
